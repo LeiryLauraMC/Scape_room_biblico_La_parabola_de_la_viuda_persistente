@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Room Bíblico – El Tesoro de la Oración</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Luckiest+Guy&family=Patrick+Hand&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f5e6c8;
+    --parchment-dark: #e8d09a;
+    --ink: #3b2a1a;
+    --red: #c0392b;
+    --gold: #d4a017;
+    --gold-light: #f0c040;
+    --brown: #6b3a1f;
+    --brown-light: #9b6a3e;
+    --green-dark: #1a4a2e;
+    --blue-dark: #1a2a4a;
+    --shadow: rgba(59,42,26,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @media print {
+    body { background: white; }
+    .card { page-break-after: always; break-after: page; }
+    .scroll-hint { display: none; }
+  }
+
+  body {
+    background: #2c1a0e;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, #3d2510 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, #1a0e06 0%, transparent 60%);
+    font-family: 'Patrick Hand', cursive;
+    padding: 30px 20px;
+    min-height: 100vh;
+  }
+
+  /* DECORATIVE WOOD BACKGROUND PATTERN */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.012) 8px,
+      rgba(255,255,255,0.012) 9px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .page-title h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(22px, 5vw, 42px);
+    color: var(--gold-light);
+    text-shadow: 0 0 20px rgba(212,160,23,0.6), 3px 3px 0 var(--brown), 6px 6px 0 rgba(0,0,0,0.3);
+    letter-spacing: 3px;
+    line-height: 1.3;
+  }
+  .page-title .sub {
+    font-family: 'Patrick Hand', cursive;
+    color: var(--parchment-dark);
+    font-size: 18px;
+    margin-top: 8px;
+    opacity: 0.8;
+  }
+
+  .cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    max-width: 750px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── CARD BASE ─────────────────────────────── */
+  .card {
+    position: relative;
+    border-radius: 12px;
+    overflow: visible;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  .card-inner {
+    background: var(--parchment);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+      linear-gradient(160deg, #fdf3dc 0%, #f0dca8 50%, #e8cfa0 100%);
+    border: 3px solid var(--brown-light);
+    border-radius: 12px;
+    padding: 36px 40px 40px;
+    box-shadow:
+      0 6px 0 var(--brown),
+      0 12px 0 rgba(0,0,0,0.3),
+      0 20px 40px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative;
+  }
+
+  /* torn top/bottom edges */
+  .card-inner::before,
+  .card-inner::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 12px;
+    background: var(--parchment);
+    background-image: linear-gradient(160deg, #fdf3dc 0%, #f0dca8 100%);
+  }
+  .card-inner::before {
+    top: -6px;
+    clip-path: polygon(0% 100%, 2% 20%, 4% 80%, 6% 10%, 8% 70%, 10% 30%, 13% 90%, 16% 20%, 19% 75%, 22% 15%, 25% 65%, 28% 25%, 31% 80%, 34% 30%, 37% 70%, 40% 10%, 43% 60%, 46% 20%, 49% 75%, 52% 35%, 55% 85%, 58% 25%, 61% 70%, 64% 15%, 67% 65%, 70% 30%, 73% 80%, 76% 20%, 79% 70%, 82% 25%, 85% 75%, 88% 35%, 91% 80%, 94% 20%, 97% 65%, 100% 20%, 100% 100%);
+  }
+  .card-inner::after {
+    bottom: -6px;
+    clip-path: polygon(0% 0%, 2% 80%, 4% 20%, 6% 90%, 8% 30%, 10% 70%, 13% 10%, 16% 80%, 19% 25%, 22% 85%, 25% 35%, 28% 75%, 31% 20%, 34% 70%, 37% 30%, 40% 90%, 43% 40%, 46% 80%, 49% 25%, 52% 65%, 55% 15%, 58% 75%, 61% 30%, 64% 85%, 67% 35%, 70% 70%, 73% 20%, 76% 80%, 79% 30%, 82% 75%, 85% 25%, 88% 65%, 91% 20%, 94% 80%, 97% 35%, 100% 80%, 100% 0%);
+  }
+
+  /* ── CORNER DECORATIONS ───────────────────── */
+  .corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    font-size: 26px;
+    line-height: 1;
+    z-index: 10;
+  }
+  .corner.tl { top: 8px; left: 10px; }
+  .corner.tr { top: 8px; right: 10px; transform: scaleX(-1); }
+  .corner.bl { bottom: 8px; left: 10px; transform: scaleY(-1); }
+  .corner.br { bottom: 8px; right: 10px; transform: scale(-1,-1); }
+
+  /* ── CARD HEADER ──────────────────────────── */
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brown);
+    color: var(--gold-light);
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  .card-badge .dot { width: 6px; height: 6px; background: var(--gold-light); border-radius: 50%; }
+
+  .card-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(18px, 4vw, 28px);
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.5);
+  }
+  .card-title .emoji-icon {
+    font-style: normal;
+    margin-right: 8px;
+  }
+
+  .divider {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--brown-light), var(--gold), var(--brown-light), transparent);
+    border-radius: 2px;
+    margin: 14px 0 20px;
+  }
+
+  /* ── BODY TEXT ────────────────────────────── */
+  .card-body {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  /* ── COVER CARD ───────────────────────────── */
+  .card-cover .card-inner {
+    text-align: center;
+    padding: 50px 40px;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(212,160,23,0.15) 0%, transparent 70%),
+      linear-gradient(160deg, #fdf3dc 0%, #f0dca8 50%, #e8cfa0 100%);
+  }
+
+  .cover-icon {
+    font-size: 70px;
+    display: block;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .cover-title-main {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(28px, 6vw, 50px);
+    color: var(--brown);
+    text-shadow: 2px 2px 0 var(--gold), 4px 4px 0 rgba(0,0,0,0.15);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+  .cover-title-sub {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(16px, 3.5vw, 26px);
+    color: var(--gold);
+    text-shadow: 1px 1px 0 var(--brown);
+    margin-bottom: 28px;
+  }
+  .cover-body {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.8;
+    max-width: 500px;
+    margin: 0 auto 24px;
+  }
+  .cover-body p { margin-bottom: 12px; }
+
+  .stars-row {
+    font-size: 20px;
+    letter-spacing: 6px;
+    color: var(--gold);
+  }
+
+  /* ── RIDDLE BOX ───────────────────────────── */
+  .riddle-box {
+    background: linear-gradient(135deg, #3b2a1a 0%, #5a3820 100%);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .riddle-box::before {
+    content: '🔍';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+    background: var(--parchment);
+    padding: 0 6px;
+    line-height: 1;
+  }
+  .riddle-box p {
+    color: var(--parchment-dark);
+    font-size: 19px;
+    line-height: 1.8;
+    font-family: 'Patrick Hand', cursive;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* ── ANSWER / CLUE REVEAL ─────────────────── */
+  .answer-block {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+    background: rgba(107,58,31,0.08);
+    border-left: 4px solid var(--brown-light);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 18px;
+  }
+  .answer-label {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 14px;
+    color: var(--brown-light);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .answer-text {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  /* ── WORD REVEAL (hidden until clicked) ──── */
+  .word-reveal {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px dashed rgba(107,58,31,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .word-label {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 15px;
+    color: var(--brown);
+    letter-spacing: 1px;
+  }
+  .word-seal {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+  }
+  .word-badge {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    font-size: 22px;
+    background: linear-gradient(135deg, var(--red) 0%, #8b1a0f 100%);
+    color: #fff;
+    padding: 6px 20px;
+    border-radius: 30px;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 6px 12px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .word-badge::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.2), transparent);
+    border-radius: 30px 30px 0 0;
+  }
+  .wax-cover {
+    position: absolute;
+    inset: -4px -10px;
+    background:
+      linear-gradient(180deg, #e8c87a 0%, #c9a44a 18%, #d4b060 35%, #c09030 50%, #d4b060 65%, #c9a44a 82%, #e8c87a 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-shadow:
+      0 3px 0 #8b6820,
+      0 5px 12px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,240,180,0.6),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: transform 0.4s cubic-bezier(0.55,0,1,0.45), opacity 0.3s ease;
+    z-index: 2;
+    border: 1.5px solid #a07828;
+    overflow: hidden;
+  }
+  /* left curl */
+  .wax-cover::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 14px;
+    background: linear-gradient(90deg, #b08030 0%, #e8c87a 60%, transparent 100%);
+    border-right: 1px solid rgba(0,0,0,0.12);
+  }
+  /* right curl */
+  .wax-cover::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 14px;
+    background: linear-gradient(270deg, #b08030 0%, #e8c87a 60%, transparent 100%);
+    border-left: 1px solid rgba(0,0,0,0.12);
+  }
+  .wax-cover-icon {
+    font-size: 15px;
+    z-index: 3;
+    opacity: 0.75;
+    letter-spacing: 3px;
+    color: #5a3a10;
+    font-family: 'Patrick Hand', cursive;
+    font-style: italic;
+    font-weight: bold;
+    text-shadow: 0 1px 0 rgba(255,220,120,0.6);
+  }
+  .wax-hint {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 13px;
+    color: var(--brown-light);
+    font-style: italic;
+    opacity: 0.85;
+    transition: opacity 0.3s;
+  }
+  .word-seal:not(.revealed):hover .wax-cover {
+    transform: scaleY(0.92) scaleX(1.03);
+    box-shadow: 0 5px 0 #8b6820, 0 8px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,240,180,0.6);
+  }
+  .word-seal.revealed .wax-cover {
+    transform: scaleY(0) translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .word-seal.revealed .word-badge {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .word-seal.revealed ~ .wax-hint {
+    opacity: 0;
+  }
+  .word-key-icon { font-size: 20px; }
+
+  /* ── CHALLENGE LIST ───────────────────────── */
+  .challenge-list {
+    list-style: none;
+    margin: 16px 0;
+  }
+  .challenge-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px;
+    margin-bottom: 10px;
+    background: rgba(107,58,31,0.07);
+    border-radius: 8px;
+    font-size: 18px;
+    color: var(--ink);
+    border: 1px solid rgba(107,58,31,0.15);
+    transition: background 0.2s;
+  }
+  .challenge-list li:hover { background: rgba(107,58,31,0.14); }
+  .challenge-icon { font-size: 22px; flex-shrink: 0; }
+  .challenge-note {
+    font-style: italic;
+    color: var(--brown-light);
+    font-size: 16px;
+    margin-top: 8px;
+  }
+
+  /* ── LETTERS DISPLAY ──────────────────────── */
+  .letters-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  .letter-tile {
+    width: 60px;
+    height: 70px;
+    background: linear-gradient(160deg, #fff8ee, #f0d9a0);
+    border: 3px solid var(--brown-light);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--brown);
+    box-shadow: 0 4px 0 var(--brown-light), 0 6px 10px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+    position: relative;
+    top: 0;
+    transition: top 0.15s, box-shadow 0.15s;
+  }
+  .letter-tile:hover {
+    top: 2px;
+    box-shadow: 0 2px 0 var(--brown-light), 0 4px 8px rgba(0,0,0,0.15);
+  }
+
+  .instruction-text {
+    text-align: center;
+    font-size: 17px;
+    color: var(--brown-light);
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  /* ── CONGRATS CARD ────────────────────────── */
+  .card-congrats .card-inner {
+    text-align: center;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(212,160,23,0.3) 0%, transparent 60%),
+      linear-gradient(160deg, #fdf3dc 0%, #f0dca8 50%, #e8cfa0 100%);
+  }
+
+  .trophy-icon {
+    font-size: 80px;
+    display: block;
+    margin: 10px 0 16px;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+    animation: bounce 1.2s ease-in-out infinite alternate;
+  }
+
+  .congrats-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(24px, 5vw, 42px);
+    color: var(--brown);
+    text-shadow: 2px 2px 0 var(--gold), 4px 4px 0 rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+  }
+  .congrats-sub {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+  }
+
+  .message-box {
+    background: linear-gradient(135deg, #2c1a0e 0%, #4a2c14 100%);
+    border: 3px solid var(--gold);
+    border-radius: 14px;
+    padding: 24px 30px;
+    margin: 20px auto;
+    max-width: 500px;
+    position: relative;
+  }
+  .message-box::before {
+    content: '✨';
+    position: absolute;
+    top: -16px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 26px;
+    background: var(--parchment);
+    padding: 0 8px;
+  }
+  .message-big {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(20px, 4vw, 32px);
+    color: var(--gold-light);
+    text-shadow: 0 0 20px rgba(212,160,23,0.5), 2px 2px 0 rgba(0,0,0,0.3);
+    line-height: 1.4;
+    letter-spacing: 2px;
+  }
+  .message-big span { color: #fff; }
+
+  .confetti-row {
+    font-size: 26px;
+    letter-spacing: 10px;
+    margin: 16px 0;
+  }
+
+  /* ── SECTION HEADER ACCENT ────────────────── */
+  .section-label {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--brown-light);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* ── SCROLL HINT ──────────────────────────── */
+  .scroll-hint {
+    text-align: center;
+    color: rgba(245,230,200,0.5);
+    font-size: 14px;
+    margin-top: 40px;
+    font-family: 'Patrick Hand', cursive;
+  }
+
+  /* ── ANIMATIONS ───────────────────────────── */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes bounce {
+    0% { transform: translateY(0) rotate(-5deg); }
+    100% { transform: translateY(-12px) rotate(5deg); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.15s; }
+  .card:nth-child(3) { animation-delay: 0.25s; }
+  .card:nth-child(4) { animation-delay: 0.35s; }
+  .card:nth-child(5) { animation-delay: 0.45s; }
+  .card:nth-child(6) { animation-delay: 0.55s; }
+  .card:nth-child(7) { animation-delay: 0.65s; }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>🗝️ ESCAPE ROOM BÍBLICO 🗝️</h1>
+  <p class="sub">La parábola de la viuda persistente</p>
+</div>
+
+<div class="cards-grid">
+
+  <!-- ═══════════════════════════════════════════ PORTADA -->
+  <div class="card card-cover">
+    <div class="card-inner">
+      <span class="corner tl">🌿</span>
+      <span class="corner tr">🌿</span>
+      <span class="corner bl">🌿</span>
+      <span class="corner br">🌿</span>
+
+      <span class="cover-icon">🏺</span>
+      <div class="cover-title-main">EL TESORO</div>
+      <div class="cover-title-sub">de la Oración</div>
+
+      <div class="cover-body">
+        <p>Una viuda de la Biblia necesitaba ayuda, pero el juez no quería escucharla. Ella volvió <strong>una y otra vez</strong>… ¡hasta que lo logró!</p>
+        <p>Jesús dijo que esta historia es para enseñarnos algo muy importante… pero el <em>mensaje se ha perdido</em>.</p>
+        <p><strong>Solo los verdaderos detectives podrán descubrirlo.</strong></p>
+        <p>Cuando descubran el mensaje correcto… <strong>recibirán las llaves para abrir el tesoro.</strong> 🗝️</p>
+      </div>
+      <div class="stars-row">✦ ✦ ✦ ✦ ✦</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PRUEBA 1 -->
+  <div class="card">
+    <div class="card-inner">
+      <span class="corner tl">📜</span>
+      <span class="corner tr">📜</span>
+      <span class="corner bl">🔑</span>
+      <span class="corner br">🔑</span>
+
+      <div class="card-badge"><span class="dot"></span>PRUEBA 1 DE 5<span class="dot"></span></div>
+      <div class="card-title"><span class="emoji-icon">🔎</span>El Mensaje Escondido</div>
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <div class="section-label">📌 Instrucciones para resolver la prueba</div>
+        <p>Por todo el salón deben buscar y <strong>tres letras</strong> encontrar, la palabra deben formar y su primera pista obtendrán.</p>
+
+        <div class="letters-row">
+          <div class="letter-tile">?</div>
+          <div class="letter-tile">?</div>
+          <div class="letter-tile">?</div>
+        </div>
+        <p class="instruction-text">👆 Cuando encuentren las 3 letras, deben ordenarlas para descubrir la palabra:</p>
+
+        <div class="word-reveal">
+          <span class="word-label">🏆 PALABRA CLAVE:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')">
+            <span class="word-badge">ORA</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint">👆 Toca el sello para revelar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PRUEBA 2 -->
+  <div class="card">
+    <div class="card-inner">
+      <span class="corner tl">⚖️</span>
+      <span class="corner tr">⚖️</span>
+      <span class="corner bl">🔑</span>
+      <span class="corner br">🔑</span>
+
+      <div class="card-badge"><span class="dot"></span>PRUEBA 2 DE 5<span class="dot"></span></div>
+      <div class="card-title"><span class="emoji-icon">🏃</span>¡Atrapa al Juez!</div>
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <div class="section-label">📌 Instrucciones para resolver la prueba</div>
+        <p>¡La viuda no se rindió! Ahora los niños tampoco pueden rendirse. Deben jugar un juego de mesa donde <strong>la viuda atrapa al juez</strong>.</p>
+
+        <div class="riddle-box">
+          <p>La viuda persiguió al juez una y otra vez, sin rendirse… ¡igual que debemos hacerlo en la oración!</p>
+        </div>
+
+        <div class="word-reveal">
+          <span class="word-label">🏆 PALABRA CLAVE:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')">
+            <span class="word-badge">SIEMPRE</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint">👆 Toca el sello para revelar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PRUEBA 3 -->
+  <div class="card">
+    <div class="card-inner">
+      <span class="corner tl">💪</span>
+      <span class="corner tr">💪</span>
+      <span class="corner bl">🔑</span>
+      <span class="corner br">🔑</span>
+
+      <div class="card-badge"><span class="dot"></span>PRUEBA 3 DE 5<span class="dot"></span></div>
+      <div class="card-title"><span class="emoji-icon">🏋️</span>El Desafío de Perseverar</div>
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <div class="section-label">📌 Instrucciones para resolver la prueba</div>
+        <p>Aquí se pone a prueba <strong>la perseverancia</strong>. Si fallan, ¡deben intentarlo otra vez! Así como la viuda no se rindió.</p>
+
+        <ul class="challenge-list">
+          <li>
+            <span class="challenge-icon">⚽</span>
+            <span>Lanzar una pelota dentro de un recipiente <strong>3 veces seguidas</strong></span>
+          </li>
+          <li>
+            <span class="challenge-icon">📚</span>
+            <span>Caminar de un lado al otro con un libro equilibrado en la cabeza</span>
+          </li>
+          <li>
+            <span class="challenge-icon">🪢</span>
+            <span>Desenredar una cuerda anudada antes de que acabe el tiempo</span>
+          </li>
+        </ul>
+        <p class="challenge-note">⚠️ Recuerda: si no lo logran al primer intento, ¡hay que intentarlo de nuevo! La clave es no rendirse.</p>
+
+        <div class="word-reveal">
+          <span class="word-label">🏆 PALABRA CLAVE:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')">
+            <span class="word-badge">NO</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint">👆 Toca el sello para revelar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PRUEBA 4 -->
+  <div class="card">
+    <div class="card-inner">
+      <span class="corner tl">🧩</span>
+      <span class="corner tr">🧩</span>
+      <span class="corner bl">🔑</span>
+      <span class="corner br">🔑</span>
+
+      <div class="card-badge"><span class="dot"></span>PRUEBA 4 DE 5<span class="dot"></span></div>
+      <div class="card-title"><span class="emoji-icon">💎</span>El Acertijo del Tesoro</div>
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <div class="section-label">📌 Resuelvan este acertijo</div>
+
+        <div class="riddle-box">
+          <p>Siempre estoy contigo cuando hablas con Dios.<br>
+          No me puedes ver, pero Dios sí me oye.<br><br>
+          ¿Qué soy?</p>
+        </div>
+
+        <div class="answer-block">
+          <span class="answer-label">✅ RESPUESTA:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')" style="height:40px; min-width:130px;">
+            <span class="word-badge" style="font-size:17px; padding:5px 18px; font-family:'Patrick Hand',cursive; letter-spacing:1px;">La oración</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint" style="font-size:12px;">👆 Toca para revelar</span>
+        </div>
+
+        <div class="word-reveal">
+          <span class="word-label">🏆 PALABRA CLAVE:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')">
+            <span class="word-badge">RINDAS</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint">👆 Toca el sello para revelar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ PRUEBA 5 -->
+  <div class="card">
+    <div class="card-inner">
+      <span class="corner tl">✝️</span>
+      <span class="corner tr">✝️</span>
+      <span class="corner bl">🔑</span>
+      <span class="corner br">🔑</span>
+
+      <div class="card-badge"><span class="dot"></span>PRUEBA 5 DE 5<span class="dot"></span></div>
+      <div class="card-title"><span class="emoji-icon">🕊️</span>El Acertijo de Jesús</div>
+      <div class="divider"></div>
+
+      <div class="card-body">
+        <div class="section-label">📌 Resuelvan este acertijo</div>
+
+        <div class="riddle-box">
+          <p>No lo podemos ver,<br>
+          pero siempre nos escucha.<br>
+          La viuda le hablaba<br>
+          y tú también puedes hablarle.<br><br>
+          ¿Quién soy?</p>
+        </div>
+
+        <div class="answer-block">
+          <span class="answer-label">✅ RESPUESTA:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')" style="height:40px; min-width:90px;">
+            <span class="word-badge" style="font-size:17px; padding:5px 18px; font-family:'Patrick Hand',cursive; letter-spacing:1px;">Dios</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint" style="font-size:12px;">👆 Toca para revelar</span>
+        </div>
+
+        <div class="word-reveal">
+          <span class="word-label">🏆 PALABRA CLAVE:</span>
+          <div class="word-seal" onclick="this.classList.toggle('revealed')">
+            <span class="word-badge">TE</span>
+            <div class="wax-cover"><span class="wax-cover-icon">? ? ?</span></div>
+          </div>
+          <span class="wax-hint">👆 Toca el sello para revelar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ FELICITACIONES -->
+  <div class="card card-congrats">
+    <div class="card-inner">
+      <span class="corner tl">🌟</span>
+      <span class="corner tr">🌟</span>
+      <span class="corner bl">🌟</span>
+      <span class="corner br">🌟</span>
+
+      <span class="trophy-icon">🏆</span>
+      <div class="congrats-title">¡FELICITACIONES!</div>
+      <div class="congrats-sub">✦ MENSAJE DESCIFRADO ✦</div>
+
+      <div class="confetti-row">🎉 🎊 🎉 🎊 🎉</div>
+
+      <div class="message-box">
+        <p class="message-big">
+          <span>ORA</span> SIEMPRE, <span>NO</span> <span>TE</span> RINDAS
+        </p>
+      </div>
+
+      <div class="confetti-row">⭐ 🗝️ ⭐ 🗝️ ⭐</div>
+
+      <div class="card-body" style="margin-top:20px;">
+        <p style="text-align:center; font-size:18px;">
+          Así como la viuda no se rindió, <strong>nosotros tampoco debemos rendirnos en la oración</strong>. ¡Dios siempre nos escucha!
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>
